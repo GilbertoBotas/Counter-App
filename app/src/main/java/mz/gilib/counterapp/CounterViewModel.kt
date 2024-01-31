@@ -1,20 +1,22 @@
 package mz.gilib.counterapp
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.ViewModel
 
 class CounterViewModel: ViewModel() {
-    private var _count: MutableState<Int> = mutableIntStateOf(0)
-    val count: MutableState<Int> = _count
-
+    private val _repository: CounterRepository = CounterRepository()
+    private val _count: MutableState<Int> = mutableIntStateOf(_repository.getCounter().count)
+    val count: State<Int> = _count
 
     fun increment() {
-        _count.value++
+        _repository.incrementCounter()
+        _count.value = _repository.getCounter().count
     }
 
     fun decrement() {
-        if (_count.value > 0)
-            _count.value--
+        _repository.decrementCounter()
+        _count.value = _repository.getCounter().count
     }
 }
